@@ -23,6 +23,27 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+// add firebase
+import firebase from 'firebase/app'
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCuHnGCmlKYQGBFFuKRsbz0xLQHomk-tyQ",
+  authDomain: "on-call-5e00c.firebaseapp.com",
+  projectId: "on-call-5e00c",
+  storageBucket: "on-call-5e00c.appspot.com",
+  messagingSenderId: "306712776551",
+  appId: "1:306712776551:web:3e4b4e9dc5aadeb25da9c2",
+  measurementId: "G-LHTC415CXT"
+};
+
+const firestoreApp = initializeApp(firebaseConfig);
+
+export const db = getFirestore(firestoreApp);
+export const auth = getAuth(firestoreApp);
+
 const app = createApp(App)
   .use(IonicVue)
   .use(router);

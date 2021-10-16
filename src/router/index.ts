@@ -1,11 +1,25 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
 import Tabs from '../views/Tabs.vue'
+import { RouteRecordRaw, RouteLocationNormalized, NavigationGuardNext } from 'vue-router';
+import { auth } from '../main'
+
+const guard = (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+  try {
+   if (auth.currentUser) {
+    next();
+   }
+   else {
+    next("/")
+   }
+  } catch (error) {
+   next("/")
+  }
+ }
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/tabs/tab1'
+    component: () => import('@/views/Authentication.vue')
   },
   {
     path: '/tabs/',
@@ -13,19 +27,21 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '',
-        redirect: '/tabs/tab1'
+        redirect: '/tabs/tools'
       },
       {
-        path: 'tab1',
-        component: () => import('@/views/Tab1.vue')
+        path: 'referral',
+        component: () => import('@/views/Referral.vue'),
+        beforeEnter: guard
       },
       {
-        path: 'tab2',
-        component: () => import('@/views/Tab2.vue')
+        path: 'list',
+        component: () => import('@/views/List.vue'),
+        beforeEnter: guard
       },
       {
-        path: 'tab3',
-        component: () => import('@/views/Tab3.vue')
+        path: 'tools',
+        component: () => import('@/views/Tools.vue')
       }
     ]
   }
