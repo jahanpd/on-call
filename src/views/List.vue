@@ -33,7 +33,8 @@
         </ion-col>
       </ion-row>
       </ion-grid>
-        <ion-grid v-if="data[0].did">
+      
+      <ion-grid v-if="data[0].did">
         <ion-list v-for="d in data" :key="d.did">
           <ion-item button=true @click="openAccordion" color="light">
             {{d.did}}

@@ -12,48 +12,68 @@
         </ion-toolbar>
       </ion-header>
     
-    <swiper effect="cube">
+    <swiper>
       <swiper-slide>
-        <div>
-          <h2>details</h2> 
-          <form
-          @submit.prevent=""
-          >
-          <ion-item>
-              <ion-label position="floating">name</ion-label>
-              <ion-input v-model="form.name"></ion-input>
-          </ion-item>
-          <ion-item>
-              <ion-label position="floating">dob</ion-label>
-              <ion-datetime v-model="form.dob" display-format="DD/MM/YYYY"></ion-datetime>
-          </ion-item>
-          <ion-item>
-              <ion-label position="floating">urn/uid</ion-label>
-              <ion-input v-model="form.urn"></ion-input>
-          </ion-item> 
-          <ion-item>
-              <ion-label position="floating">sex</ion-label>
-              <ion-select v-model="form.sex">
-                <ion-select-option value="f">Female</ion-select-option>
-                <ion-select-option value="m">Male</ion-select-option>
-              </ion-select>
-          </ion-item>
-        </form>
-        </div>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <h2>details</h2> 
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <form
+              @submit.prevent=""
+              >
+              <ion-item>
+                  <ion-label position="floating">name</ion-label>
+                  <ion-input v-model="form.name"></ion-input>
+              </ion-item>
+              <ion-item>
+                  <ion-label position="floating">dob</ion-label>
+                  <ion-datetime v-model="form.dob" display-format="DD/MM/YYYY"></ion-datetime>
+              </ion-item>
+              <ion-item>
+                  <ion-label position="floating">urn/uid</ion-label>
+                  <ion-input v-model="form.urn"></ion-input>
+              </ion-item> 
+              <ion-item>
+                  <ion-label position="floating">sex</ion-label>
+                  <ion-select v-model="form.sex">
+                    <ion-select-option value="f">Female</ion-select-option>
+                    <ion-select-option value="m">Male</ion-select-option>
+                  </ion-select>
+              </ion-item>
+              <ion-item>
+                  <ion-label position="floating">location</ion-label>
+                  <ion-input v-model="form.location"></ion-input>
+              </ion-item> 
+            </form>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </swiper-slide>
       
       <swiper-slide>
-        <div>
-          <h2>story</h2> 
-          <form
-          @submit.prevent=""
-          >
-          <ion-item>
-              <ion-label position="floating">Free text</ion-label>
-              <ion-textarea v-model="form.story"  autoGrow="true" clear-on-edit="false"></ion-textarea>
-          </ion-item>
-        </form>
-        </div>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <h2>story</h2> 
+            </ion-col>
+          </ion-row>
+          <ion-row id="story1">
+            <ion-col id="story2">
+              <form
+              @submit.prevent=""
+              >
+                <ion-item height=100% width=100%>
+                    <ion-label position="floating">Free text</ion-label>
+                    <ion-textarea height=100% auto-grow=true v-model="form.story" clear-on-edit="false"></ion-textarea>
+                </ion-item>
+              </form>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </swiper-slide>
       
       <swiper-slide>
@@ -167,7 +187,7 @@
         </form>
         </div>
       </swiper-slide>
- 
+
     </swiper>
     
 
@@ -181,14 +201,14 @@ import { IonSelect, IonSelectOption} from '@ionic/vue';
 import { IonCardContent} from '@ionic/vue';
 import { IonButton, IonLabel, IonInput, IonTextarea, IonDatetime} from '@ionic/vue';
 import { defineComponent, reactive, toRefs} from 'vue';
-import SwiperCore, { EffectCube } from 'swiper';
+import SwiperCore from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { collection, addDoc } from "firebase/firestore";
 import { auth, db } from "../main";
 import 'swiper/swiper-bundle.min.css';
 import '@ionic/vue/css/ionic-swiper.css';
 
-SwiperCore.use([IonicSwiper, EffectCube]);
+SwiperCore.use([IonicSwiper]);
 
 
 export default defineComponent({
@@ -216,6 +236,7 @@ export default defineComponent({
         name: "",
         dob: "",
         urn: "",
+        location:"",
         sex:"",
         story:"",
         comorb:"",
@@ -297,6 +318,20 @@ export default defineComponent({
 
 <style scoped>
 
+ion-grid {
+    height: 100%;
+    width: 100%
+  }
+
+
+#story1 {
+  height:100%;
+  width:100%;
+}
+#story2 {
+  height:100%;
+  width:100%;
+}
 div {
     height:100%;
     width:100%;
