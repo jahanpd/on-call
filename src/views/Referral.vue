@@ -12,11 +12,11 @@
         </ion-toolbar>
       </ion-header>
     
-      <ion-grid>
-        <ion-item button=true @click="openAccordion" color="light">
+      <ion-card>
+        <ion-card-header button=true @click="openAccordion" color="light">
           details
-        </ion-item>
-        <ion-item v-show="false">
+        </ion-card-header>
+        <ion-card-content v-show="false">
               <form
               @submit.prevent=""
               >
@@ -44,82 +44,82 @@
                   <ion-input v-model="form.location"></ion-input>
               </ion-item> 
             </form>
-        </ion-item>
-      </ion-grid>
+        </ion-card-content>
+      </ion-card>
       
-      <ion-grid>
-        <ion-item button=true @click="openAccordion" color="light">
+      <ion-card>
+        <ion-card-header button=true @click="openAccordion" color="light">
           story
-        </ion-item>
-        <ion-item v-show="false">
+        </ion-card-header>
+        <ion-card-content v-show="false">
           <form
           @submit.prevent=""
           >
             <ion-item height=100% width=100%>
-                <ion-label position="floating">Free text</ion-label>
-                <ion-textarea height=100% auto-grow=true v-model="form.story" clear-on-edit="false"></ion-textarea>
+                <ion-label position="stacked">Brief history here</ion-label>
+                <ion-textarea rows=10 height=100% auto-grow="false" v-model="form.story" clear-on-edit="false"></ion-textarea>
             </ion-item>
           </form>
-        </ion-item> 
-      </ion-grid>
+        </ion-card-content> 
+      </ion-card>
 
-      <ion-grid>
-        <ion-item button=true @click="openAccordion" color="light">
+      <ion-card>
+        <ion-card-header button=true @click="openAccordion" color="light">
           other
-        </ion-item>
-        <ion-item v-show="false">
+        </ion-card-header>
+        <ion-card-content v-show="false">
           <form
           @submit.prevent=""
           >
           <ion-item>
-              <ion-label position="floating">comorb</ion-label>
-              <ion-textarea v-model="form.comorb"  autoGrow="true" clear-on-edit="false"></ion-textarea>
+              <ion-label position="stacked">comorb</ion-label>
+              <ion-textarea rows=3 v-model="form.comorb"  autogrow="false" clear-on-edit="false"></ion-textarea>
           </ion-item>
           <ion-item>
-              <ion-label position="floating">meds</ion-label>
-              <ion-textarea v-model="form.meds"  autoGrow="true" clear-on-edit="false"></ion-textarea>
+              <ion-label position="stacked">meds</ion-label>
+              <ion-textarea rows=3 v-model="form.meds"  autogrow="false" clear-on-edit="false"></ion-textarea>
           </ion-item>
           <ion-item>
-              <ion-label position="floating">investigations</ion-label>
-              <ion-textarea v-model="form.inv"  autoGrow="true" clear-on-edit="false"></ion-textarea>
+              <ion-label position="stacked">investigations</ion-label>
+              <ion-textarea rows=3 v-model="form.inv"  autogrow="false" clear-on-edit="false"></ion-textarea>
           </ion-item>
           </form>
-        </ion-item> 
-      </ion-grid>
+        </ion-card-content> 
+      </ion-card>
 
-      <ion-grid>
-        <ion-item button=true @click="openAccordion" color="light">
+      <ion-card>
+        <ion-card-header button=true @click="openAccordion" color="light">
           diagnosis
-        </ion-item>
-        <ion-item v-show="false">
+        </ion-card-header>
+        <ion-card-content v-show="false">
           <form
           @submit.prevent=""
           >
           <ion-item>
-              <ion-label position="floating">working dx</ion-label>
-              <ion-textarea v-model="form.workingDx"  autoGrow="true" clear-on-edit="false"></ion-textarea>
+              <ion-label position="stacked">working dx</ion-label>
+              <ion-textarea rows=1 v-model="form.workingDx"  autogrow="false" clear-on-edit="false"></ion-textarea>
           </ion-item>
           <ion-item>
-              <ion-label position="floating">evidence for</ion-label>
-              <ion-textarea v-model="form.evidenceFor"  autoGrow="true" clear-on-edit="false"></ion-textarea>
+              <ion-label position="stacked">evidence for</ion-label>
+              <ion-textarea rows=2 v-model="form.evidenceFor"  autogrow="false" clear-on-edit="false"></ion-textarea>
           </ion-item>
           <ion-item>
-              <ion-label position="floating">evidence against</ion-label>
-              <ion-textarea v-model="form.evidenceAgainst"  autoGrow="true" clear-on-edit="false"></ion-textarea>
+              <ion-label position="stacked">evidence against</ion-label>
+              <ion-textarea rows=2 v-model="form.evidenceAgainst"  autogrow="false" clear-on-edit="false"></ion-textarea>
           </ion-item>
           <ion-item>
-              <ion-label position="floating">provisional plan</ion-label>
-              <ion-textarea v-model="form.plan"  autoGrow="true" clear-on-edit="false"></ion-textarea>
+              <ion-label position="stacked">provisional plan</ion-label>
+              <ion-textarea rows=3 v-model="form.plan"  autogrow="false" clear-on-edit="false"></ion-textarea>
           </ion-item>
           </form>
-        </ion-item> 
-      </ion-grid>
+        </ion-card-content> 
+      </ion-card>
 
-      <ion-grid>
-        <ion-item button=true @click="openAccordion" color="light">
+      <ion-card>
+        <ion-card-header button=true @click="openAccordion" color="light">
           misc
-        </ion-item>
-        <ion-item v-show="false">
+        </ion-card-header>
+        <ion-card-content v-show="false">
           <form
           @submit.prevent="onSubmit(form)"
           >
@@ -137,39 +137,39 @@
           </ion-item>
           <ion-item>
               <ion-label position="floating">allergies</ion-label>
-              <ion-textarea v-model="form.allergies"  autoGrow="true" clear-on-edit="false"></ion-textarea>
+              <ion-input v-model="form.allergies"  autogrow="false" clear-on-edit="false"></ion-input>
           </ion-item>
           <ion-item>
               <ion-label position="floating">smoking history</ion-label>
-              <ion-textarea v-model="form.smoking"  autoGrow="true" clear-on-edit="false"></ion-textarea>
+              <ion-input v-model="form.smoking"  autogrow="false" clear-on-edit="false"></ion-input>
           </ion-item>
           <ion-item>
               <ion-label position="floating">bmi</ion-label>
-              <ion-textarea v-model="form.bmi"  autoGrow="true" clear-on-edit="false"></ion-textarea>
+              <ion-input v-model="form.bmi"  autogrow="false" clear-on-edit="false"></ion-input>
           </ion-item>
           </form>
-        </ion-item> 
-      </ion-grid>
+        </ion-card-content> 
+      </ion-card>
 
-      <ion-grid>
-        <ion-item button=true @click="openAccordion" color="light">
+      <ion-card>
+        <ion-card-header button=true @click="openAccordion" color="light">
           referral type information
-        </ion-item>
-        <ion-item v-show="false">
+        </ion-card-header>
+        <ion-card-content v-show="false">
           <form
           @submit.prevent=""
           >
           <ion-item>
-              <ion-label position="floating">arrival time (if transfer)</ion-label>
+              <ion-label position="floating">projected arrival time (if transfer)</ion-label>
               <ion-datetime v-model="form.arrival" display-format="D/MMM/YYYY H:mm"></ion-datetime>
           </ion-item>
           <ion-item>
-              <ion-label position="floating">consult team</ion-label>
-              <ion-textarea v-model="form.consult"  autoGrow="true" clear-on-edit="false"></ion-textarea> 
+              <ion-label position="floating">home team (if consult)</ion-label>
+              <ion-input v-model="form.consult"  autogrow="false" clear-on-edit="false"></ion-input> 
           </ion-item>
         </form>
-        </ion-item> 
-      </ion-grid>
+        </ion-card-content> 
+      </ion-card>
       <form @submit.prevent="onSubmit(form)">
       <ion-button
           expand="block"
@@ -191,8 +191,8 @@
 <script lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem} from '@ionic/vue';
 import { IonSelect, IonSelectOption} from '@ionic/vue';
-import { IonGrid } from '@ionic/vue';
-import { IonCardContent, IonButton, IonLabel, IonInput, IonTextarea, IonDatetime} from '@ionic/vue';
+import { IonCardContent, IonCard, IonCardHeader } from '@ionic/vue';
+import { IonButton, IonLabel, IonInput, IonTextarea, IonDatetime} from '@ionic/vue';
 import { defineComponent, reactive, toRefs} from 'vue';
 import { collection, addDoc } from "firebase/firestore";
 import { auth, db } from "../main";
@@ -213,7 +213,8 @@ export default defineComponent({
     IonSelect,
     IonSelectOption,
     IonCardContent,
-    IonGrid
+    IonCard,
+    IonCardHeader
   },
   setup() {
     const state = reactive({
@@ -259,34 +260,28 @@ export default defineComponent({
           if (user !== null) {
             const uid = user.uid;
             console.log(uid);
-            x["uid"] = uid;
-            x["timestamp"]=dateTime;
+            // make sure each field is a timestamped array of objects
+            const dataInput: Record<string, any> = {}
+            for (const key in x){
+              dataInput[key] = [{
+                timestamp: dateTime,
+                value: x[key]
+              }];
+              x[key]=""
+            }
+            dataInput["uid"] = uid;
+            dataInput["timestamp"]=dateTime;
+            dataInput["open"]=true;
             try {
-              const docRef = await addDoc(collection(db, "referrals"), x);
+              const docRef = await addDoc(collection(db, "referrals"), dataInput);
               console.log("written_data");
               console.log(docRef); 
             } catch (e) {
               console.error("Error adding document: ", e);
             }
           }
-          //console.log(user);
-          // db structure
-          // {referrals:{userID:{timestamp:{data
-
         } catch (error) {
         state.form.errorMsg = "error";
-      }
-    };
-    const resetForm = async (
-      x: Record<string, string>
-    ) => {
-      try {
-        console.log("yolo")
-        for (const key of Object.keys(x)){
-          x[key] = ""
-        }
-      } catch (error) {
-        console.log("didn't reset")
       }
     };
     const openAccordion = async (event: any) => {
@@ -301,7 +296,6 @@ export default defineComponent({
     return{
       ...toRefs(state),
       onSubmit,
-      resetForm,
       openAccordion
     }
   }
@@ -311,10 +305,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
-ion-grid {
-    height: auto;
-    width: 100%
-  }
 
 </style>
