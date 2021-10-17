@@ -12,16 +12,11 @@
         </ion-toolbar>
       </ion-header>
     
-    <swiper>
-      <swiper-slide>
-        <ion-grid>
-          <ion-row>
-            <ion-col>
-              <h2>details</h2> 
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
+      <ion-grid>
+        <ion-item button=true @click="openAccordion" color="light">
+          details
+        </ion-item>
+        <ion-item v-show="false">
               <form
               @submit.prevent=""
               >
@@ -49,36 +44,30 @@
                   <ion-input v-model="form.location"></ion-input>
               </ion-item> 
             </form>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </swiper-slide>
+        </ion-item>
+      </ion-grid>
       
-      <swiper-slide>
-        <ion-grid>
-          <ion-row>
-            <ion-col>
-              <h2>story</h2> 
-            </ion-col>
-          </ion-row>
-          <ion-row id="story1">
-            <ion-col id="story2">
-              <form
-              @submit.prevent=""
-              >
-                <ion-item height=100% width=100%>
-                    <ion-label position="floating">Free text</ion-label>
-                    <ion-textarea height=100% auto-grow=true v-model="form.story" clear-on-edit="false"></ion-textarea>
-                </ion-item>
-              </form>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </swiper-slide>
-      
-      <swiper-slide>
-        <div>
-          <h2>other</h2>
+      <ion-grid>
+        <ion-item button=true @click="openAccordion" color="light">
+          story
+        </ion-item>
+        <ion-item v-show="false">
+          <form
+          @submit.prevent=""
+          >
+            <ion-item height=100% width=100%>
+                <ion-label position="floating">Free text</ion-label>
+                <ion-textarea height=100% auto-grow=true v-model="form.story" clear-on-edit="false"></ion-textarea>
+            </ion-item>
+          </form>
+        </ion-item> 
+      </ion-grid>
+
+      <ion-grid>
+        <ion-item button=true @click="openAccordion" color="light">
+          other
+        </ion-item>
+        <ion-item v-show="false">
           <form
           @submit.prevent=""
           >
@@ -94,13 +83,15 @@
               <ion-label position="floating">investigations</ion-label>
               <ion-textarea v-model="form.inv"  autoGrow="true" clear-on-edit="false"></ion-textarea>
           </ion-item>
-        </form>
-        </div>
-      </swiper-slide>
+          </form>
+        </ion-item> 
+      </ion-grid>
 
-      <swiper-slide>
-        <div>
-          <h2>diagnosis</h2>
+      <ion-grid>
+        <ion-item button=true @click="openAccordion" color="light">
+          diagnosis
+        </ion-item>
+        <ion-item v-show="false">
           <form
           @submit.prevent=""
           >
@@ -120,14 +111,15 @@
               <ion-label position="floating">provisional plan</ion-label>
               <ion-textarea v-model="form.plan"  autoGrow="true" clear-on-edit="false"></ion-textarea>
           </ion-item>
+          </form>
+        </ion-item> 
+      </ion-grid>
 
-        </form>
-        </div>
-      </swiper-slide>
-
-      <swiper-slide>
-        <div>
-          <h2>misc</h2>
+      <ion-grid>
+        <ion-item button=true @click="openAccordion" color="light">
+          misc
+        </ion-item>
+        <ion-item v-show="false">
           <form
           @submit.prevent="onSubmit(form)"
           >
@@ -155,15 +147,17 @@
               <ion-label position="floating">bmi</ion-label>
               <ion-textarea v-model="form.bmi"  autoGrow="true" clear-on-edit="false"></ion-textarea>
           </ion-item>
-          
-        </form>
-        </div>
-      </swiper-slide>
-      <swiper-slide>
-        <div>
-          <h2>referral type information</h2>
+          </form>
+        </ion-item> 
+      </ion-grid>
+
+      <ion-grid>
+        <ion-item button=true @click="openAccordion" color="light">
+          referral type information
+        </ion-item>
+        <ion-item v-show="false">
           <form
-          @submit.prevent="onSubmit(form)"
+          @submit.prevent=""
           >
           <ion-item>
               <ion-label position="floating">arrival time (if transfer)</ion-label>
@@ -173,43 +167,35 @@
               <ion-label position="floating">consult team</ion-label>
               <ion-textarea v-model="form.consult"  autoGrow="true" clear-on-edit="false"></ion-textarea> 
           </ion-item>
-          <ion-button
-              expand="block"
-              color="primary"
-              class="ion-margin-top"
-              type="submit"
-          >
-              Submit
-          </ion-button>
-          <ion-card-content v-if="form.errorMsg" class="error-message">
-            {{ form.errorMsg }}
-          </ion-card-content>
         </form>
-        </div>
-      </swiper-slide>
-
-    </swiper>
-    
+        </ion-item> 
+      </ion-grid>
+      <form @submit.prevent="onSubmit(form)">
+      <ion-button
+          expand="block"
+          color="primary"
+          class="ion-margin-top"
+          type="submit"
+      >
+          Submit
+      </ion-button>
+      </form>
+      <ion-card-content v-if="form.errorMsg" class="error-message">
+        {{ form.errorMsg }}
+      </ion-card-content>
 
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonicSwiper, IonItem} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem} from '@ionic/vue';
 import { IonSelect, IonSelectOption} from '@ionic/vue';
-import { IonCardContent} from '@ionic/vue';
-import { IonButton, IonLabel, IonInput, IonTextarea, IonDatetime} from '@ionic/vue';
+import { IonGrid } from '@ionic/vue';
+import { IonCardContent, IonButton, IonLabel, IonInput, IonTextarea, IonDatetime} from '@ionic/vue';
 import { defineComponent, reactive, toRefs} from 'vue';
-import SwiperCore from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/vue';
 import { collection, addDoc } from "firebase/firestore";
 import { auth, db } from "../main";
-import 'swiper/swiper-bundle.min.css';
-import '@ionic/vue/css/ionic-swiper.css';
-
-SwiperCore.use([IonicSwiper]);
-
 
 export default defineComponent({
   components: { 
@@ -218,8 +204,6 @@ export default defineComponent({
     IonTitle,
     IonContent,
     IonPage,
-    Swiper,
-    SwiperSlide,
     IonButton,
     IonLabel, 
     IonInput,
@@ -228,7 +212,8 @@ export default defineComponent({
     IonItem,
     IonSelect,
     IonSelectOption,
-    IonCardContent
+    IonCardContent,
+    IonGrid
   },
   setup() {
     const state = reactive({
@@ -304,11 +289,20 @@ export default defineComponent({
         console.log("didn't reset")
       }
     };
-
+    const openAccordion = async (event: any) => {
+      // event.classList.toggle("active");
+      const panel = event.target.nextElementSibling;
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+        } else {
+        panel.style.display = "block";
+      }
+    };
     return{
       ...toRefs(state),
       onSubmit,
-      resetForm
+      resetForm,
+      openAccordion
     }
   }
 
@@ -319,22 +313,8 @@ export default defineComponent({
 <style scoped>
 
 ion-grid {
-    height: 100%;
+    height: auto;
     width: 100%
   }
-
-
-#story1 {
-  height:100%;
-  width:100%;
-}
-#story2 {
-  height:100%;
-  width:100%;
-}
-div {
-    height:100%;
-    width:100%;
-}
 
 </style>
