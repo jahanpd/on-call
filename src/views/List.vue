@@ -4,10 +4,10 @@
       <ion-toolbar>
         <ion-buttons slot="primary">
           <ion-button @click="queryToggle" color="secondary" v-if="queryDateTime">
-            by OPEN CASE
+            OPEN CASES
           </ion-button>
           <ion-button @click="queryToggle" color="secondary" v-else>
-            by DATE
+            search by DATE
           </ion-button>
         </ion-buttons>
         <ion-title>List</ion-title>
@@ -46,15 +46,40 @@
           </ion-item>
           <ion-text v-if="d.show">
               <p class="inputText">
-              Working Dx: {{ d.data.workingDx }}  <br> 
-              Story: {{ d.data.story }}
+                <strong> Working Dx: </strong> {{ d.data.workingDx }}  <br>
+                <strong> Evidence for dx: </strong> {{ d.data.evidenceFor }} <br>
+                <strong> Evidence against dx: </strong> {{ d.data.evidenceAgainst }} <br>
+                <strong> Story: </strong> {{ d.data.story }} <br>
+              </p>
+              <p class="inputText" v-if="Object.keys(d.data).includes('NELA')">
+                <strong> NELA: </strong> {{ d.data.NELA }}
+              </p>
+              <p class="inputText" v-if="Object.keys(d.data).includes('CHADSVASC')">
+                <strong> CHADSVASC: </strong> {{ d.data.CHADSVASC.score }} 
               </p>
           </ion-text>
+          <ion-text>
+          </ion-text>
+  
           <ion-toolbar v-if="d.show">
             <ion-buttons slot="primary">
-              <ion-button @click="openModal(d)" color="secondary">
+              <ion-button @click="openModal(d, 'edit')" color="secondary">
                 edit
-              </ion-button> 
+              </ion-button>
+              <ion-button @click="openModal(d, 'view')" color="secondary">
+                view
+              </ion-button>  
+            </ion-buttons>
+            <ion-buttons slot="start">
+              <ion-button @click="openPopover(d, $event)" color="secondary">
+                  add score
+              </ion-button>
+              <ion-button v-if="d.data.open" @click="toggleCase(d)" color="secondary">
+                  close case
+              </ion-button>
+              <ion-button v-else @click="toggleCase(d)" color="secondary">
+                  open case
+              </ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-list>
@@ -74,11 +99,13 @@ import { IonItem, IonLabel, IonDatetime, IonCardContent} from '@ionic/vue';
 import { IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { IonText, IonButtons, IonButton } from '@ionic/vue';
-import { defineComponent, reactive, toRefs} from 'vue';
-import { query, getDocs, collection, where } from "firebase/firestore";
+import { defineComponent, reactive, toRefs } from 'vue';
+import { query, getDocs, collection, where, updateDoc, doc } from "firebase/firestore";
 import { auth, db } from "../main";
-import { modalController } from '@ionic/vue';
-import Modal from '../components/editEntry.vue'
+import { modalController, popoverController} from '@ionic/vue';
+import ModalEdit from '../components/editEntry.vue'
+import ModalView from '../components/viewEntry.vue'
+import Popover from '../components/scorePopover.vue'
 
 export default defineComponent({
   components: { 
@@ -94,8 +121,10 @@ export default defineComponent({
       errorMsg:"",
       returned:0,
       queryDateTime:false,
-      modalState:null
+      modalState:null,
+      formSelect:"",
     });
+
     const doRefresh = async (event: any) => {
       state.errorMsg = "";
       const user = auth.currentUser;
@@ -108,13 +137,11 @@ export default defineComponent({
         state.errorMsg = "user not authenticated";
         return;
       }
-      console.log(state.start);
       if (!state.start && !state.end && state.queryDateTime){
         state.errorMsg = "input datetime range";
         return;
       }
       const uid = user.uid;
-      console.log(uid);
       try {
         const coll = collection(db, "referrals");
         const start = new Date(state.start);
@@ -140,9 +167,7 @@ export default defineComponent({
               docBuild[key] = data[key]
             }
           }
-          console.log(docBuild);
           const did = doc.id;
-          console.log(did);
           if (docBuild.timestamp.toDate() <= end || !state.queryDateTime){
             const save = {
               did:did,
@@ -155,12 +180,13 @@ export default defineComponent({
         state.data = dataList;
         state.returned = dataList.length
         if (dataList.length == 0){
-          state.errorMsg = "No records in chosen timeperiod";
+          state.errorMsg = "Either no records in chosen timeperiod or none are currently open";
           return;
         }
       } catch (error){
         console.log(error);
-        state.errorMsg = "failed to get data from database"
+        state.errorMsg = "failed to get data from database";
+        alert('query failed, check internet connection or try logging in again')
         return;
       }
     };
@@ -180,13 +206,21 @@ export default defineComponent({
     const queryToggle = async () => {
       state.queryDateTime = !state.queryDateTime
     };
-    const openModal = async (dataDict: any) => {
+    const openModal = async (dataDict: any, view: string) => {
       // define components here
+      let Modal = ModalView
+      let Title = 'Editing Entry'
+      if (view == 'edit') {
+        Modal = ModalEdit;
+        Title = 'Editing Entry'
+      } else if (view == 'view') {
+        Modal = ModalView;
+        Title = 'View Entry'
+      }
       const componentDict = {
-        title: 'Editing Entry',
+        title: Title,
         data: dataDict,
         content:'test'
-
       };
 
       const modal = await modalController
@@ -196,9 +230,35 @@ export default defineComponent({
         })
         return modal.present()
     };
-    async function closeModal() {
-      await modalController.dismiss();
-    }
+  
+    const openPopover = async (dataDict: any, ev: Event) => {
+      const popover = await popoverController
+        .create({
+          component: Popover,
+          event: ev,
+          translucent: true,
+          componentProps: {
+            data: dataDict
+          }
+        })
+      await popover.present();
+
+      const { role } = await popover.onDidDismiss();
+      console.log("dismissed with ", role)
+    };
+    const toggleCase = async (dataDict: any) => {
+      try {
+        const newOpen = !dataDict.data.open;
+        const docRef = doc(db, 'referrals', dataDict.did);
+        await updateDoc(docRef, {
+          "open":newOpen
+        });
+        dataDict.data["open"] = newOpen;
+      } catch (e) {
+        console.log(e);
+        alert('didnt update database, check internet connection or log in again')
+      }
+    };
     return { 
       ...toRefs(state),
       doRefresh,
@@ -206,7 +266,8 @@ export default defineComponent({
       getDOBAgeStr,
       queryToggle,
       openModal,
-      closeModal
+      openPopover,
+      toggleCase
       }
   }
 });
