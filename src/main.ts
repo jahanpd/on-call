@@ -26,10 +26,10 @@ import '@ionic/vue/css/display.css';
 import './theme/variables.css';
 
 // add firebase
-import firebase from 'firebase/app'
+import * as firebase from 'firebase/app'
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCuHnGCmlKYQGBFFuKRsbz0xLQHomk-tyQ",
@@ -45,6 +45,8 @@ const firestoreApp = initializeApp(firebaseConfig);
 
 export const db = getFirestore(firestoreApp);
 export const auth = getAuth(firestoreApp);
+
+await setPersistence(auth, browserLocalPersistence);
 
 const app = createApp(App)
   .use(IonicVue)
