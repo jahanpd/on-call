@@ -5,20 +5,30 @@ import { auth } from '../main'
 
 const guard = (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
   try {
-   if (auth.currentUser) {
-    next();
-   }
-   else {
-    next("/")
-   }
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+      console.log(auth.currentUser);
+      next();
+      }
+      else {
+      console.log(auth);
+      console.log('no user registered');
+      next("/login");
+      }
+    })
   } catch (error) {
-   next("/")
+    next("/login")
   }
- }
+}
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
+    redirect: '/tabs/tools'
+    // component: () => import('@/views/Authentication.vue')
+  },
+  {
+    path: '/login',
     component: () => import('@/views/Authentication.vue')
   },
   {
@@ -41,7 +51,8 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'tools',
-        component: () => import('@/views/Tools.vue')
+        component: () => import('@/views/Tools.vue'),
+        beforeEnter: guard
       }
     ]
   }

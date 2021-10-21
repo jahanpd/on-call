@@ -56,7 +56,8 @@
       "appleMobileWebAppCapable":"yes",
       "manifestOptions":{
         "display":"browser"
-      }
+      },
+      "start_url":"/tabs/tools"
     }
   }
 }
