@@ -55,7 +55,7 @@
       "name":"on-call",
       "appleMobileWebAppCapable":"yes",
       "manifestOptions":{
-        "display":"standalone"
+        "display":"fullscreen"
       }
     }
   }
