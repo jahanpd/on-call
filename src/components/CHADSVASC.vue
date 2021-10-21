@@ -19,38 +19,38 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>female</ion-label>
-                    <ion-radio-group  v-model="form.female">
-                        <ion-radio :value=true></ion-radio>
+                    <ion-radio-group allow-empty-selection >
+                        <ion-radio :value=true @click="toggleVal('female')" ></ion-radio>
                     </ion-radio-group>
                 </ion-item>
                 <ion-item>
                     <ion-label>chf</ion-label>
-                    <ion-radio-group v-model="form.chf">
-                        <ion-radio :value=true></ion-radio>
+                    <ion-radio-group allow-empty-selection>
+                        <ion-radio :value=true @click="toggleVal('chf')"></ion-radio>
                     </ion-radio-group>
                 </ion-item>
                 <ion-item>
                     <ion-label>htn</ion-label>
-                    <ion-radio-group v-model="form.htn">
-                        <ion-radio :value=true></ion-radio>
+                    <ion-radio-group allow-empty-selection>
+                        <ion-radio :value=true @click="toggleVal('htn')"></ion-radio>
                     </ion-radio-group>
                 </ion-item>
                 <ion-item>
                     <ion-label>cva</ion-label>
-                    <ion-radio-group v-model="form.cva">
-                        <ion-radio :value=true></ion-radio>
+                    <ion-radio-group allow-empty-selection>
+                        <ion-radio :value=true @click="toggleVal('cva')"></ion-radio>
                     </ion-radio-group>
                 </ion-item>
                 <ion-item>
                     <ion-label>vasc</ion-label>
-                    <ion-radio-group v-model="form.vasc">
-                        <ion-radio :value=true></ion-radio>
+                    <ion-radio-group allow-empty-selection>
+                        <ion-radio :value=true @click="toggleVal('vasc')"></ion-radio>
                     </ion-radio-group>
                 </ion-item>
                 <ion-item>
                     <ion-label>diabetes</ion-label>
-                    <ion-radio-group v-model="form.diab">
-                        <ion-radio :value=true></ion-radio>
+                    <ion-radio-group allow-empty-selection>
+                        <ion-radio :value=true @click="toggleVal('diab')"></ion-radio>
                     </ion-radio-group>
                 </ion-item>
                 <ion-button
@@ -177,10 +177,14 @@ export default defineComponent({
             }
             await modalController.dismiss();
         };
+        const toggleVal = async (x) => {
+            state.form[x] = !state.form[x];
+        }
         return {
             ...toRefs(state),
             closeModal,
             onSubmit,
+            toggleVal
         }
     }
 });
