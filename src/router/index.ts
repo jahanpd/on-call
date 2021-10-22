@@ -7,11 +7,9 @@ const guard = (to: RouteLocationNormalized, from: RouteLocationNormalized, next:
   try {
     auth.onAuthStateChanged((user) => {
       if (user) {
-      console.log(auth.currentUser);
       next();
       }
       else {
-      console.log(auth);
       console.log('no user registered');
       next("/login");
       }

@@ -3,12 +3,12 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="primary">
-          <ion-button @click="queryToggle" color="secondary" v-if="queryDateTime">
-            OPEN CASES
+          <ion-button @click="openPopoverFilter(queryType, $event)" color="secondary">
+                  Filter:
           </ion-button>
-          <ion-button @click="queryToggle" color="secondary" v-else>
-            search by DATE
-          </ion-button>
+          <ion-text>
+              {{ queryType.type }}
+          </ion-text>
         </ion-buttons>
         <ion-title>List</ion-title>
       </ion-toolbar>
@@ -20,7 +20,7 @@
       <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
 
-      <ion-grid v-if="queryDateTime">
+      <ion-grid v-if="queryType.type == 'datetime'">
       <ion-row>
         <ion-col>
           <ion-item>
@@ -50,12 +50,16 @@
                 <strong> Evidence for dx: </strong> {{ d.data.evidenceFor }} <br>
                 <strong> Evidence against dx: </strong> {{ d.data.evidenceAgainst }} <br>
                 <strong> Story: </strong> {{ d.data.story }} <br>
+                <strong> Plan </strong> {{ d.data.plan }} <br>
               </p>
               <p class="inputText" v-if="Object.keys(d.data).includes('NELA')">
-                <strong> NELA: </strong> {{ d.data.NELA }}
+                <strong> NELA: </strong> {{ d.data.NELA.score }}
               </p>
               <p class="inputText" v-if="Object.keys(d.data).includes('CHADSVASC')">
                 <strong> CHADSVASC: </strong> {{ d.data.CHADSVASC.score }} 
+              </p>
+              <p class="inputText" v-if="Object.keys(d.data).includes('APACHE')">
+                <strong> APACHE: </strong> {{ d.data.APACHE.score }} 
               </p>
           </ion-text>
           <ion-text>
@@ -71,13 +75,16 @@
               </ion-button>  
             </ion-buttons>
             <ion-buttons slot="start">
-              <ion-button @click="openPopover(d, $event)" color="secondary">
+              <ion-button @click="openPopover(d, $event)" color="primary">
                   add score
               </ion-button>
-              <ion-button v-if="d.data.open" @click="toggleCase(d)" color="secondary">
+              <ion-button @click="openModal(d, 'chase')" color="primary">
+                to chase
+              </ion-button>
+              <ion-button v-if="d.data.open" @click="toggleCase(d)" color="danger">
                   close case
               </ion-button>
-              <ion-button v-else @click="toggleCase(d)" color="secondary">
+              <ion-button v-else @click="toggleCase(d)" color="warning">
                   open case
               </ion-button>
             </ion-buttons>
@@ -105,7 +112,9 @@ import { auth, db } from "../main";
 import { modalController, popoverController} from '@ionic/vue';
 import ModalEdit from '../components/editEntry.vue'
 import ModalView from '../components/viewEntry.vue'
+import ModalChase from '../components/chaseList.vue'
 import Popover from '../components/scorePopover.vue'
+import PopoverFilter from '../components/filterPopover.vue'
 
 export default defineComponent({
   components: { 
@@ -120,7 +129,7 @@ export default defineComponent({
       data:[{}],
       errorMsg:"",
       returned:0,
-      queryDateTime:false,
+      queryType:{"type":"open"}, // options: ['datetime', 'last24', 'open']
       modalState:null,
       formSelect:"",
     });
@@ -137,17 +146,22 @@ export default defineComponent({
         state.errorMsg = "user not authenticated";
         return;
       }
-      if (!state.start && !state.end && state.queryDateTime){
+      if (!state.start && !state.end && state.queryType.type == 'datetime') {
         state.errorMsg = "input datetime range";
         return;
       }
       const uid = user.uid;
       try {
         const coll = collection(db, "referrals");
-        const start = new Date(state.start);
-        const end = new Date(state.end);
+        let start = new Date(state.start);
+        let end = new Date(state.end);
+        if (state.queryType.type == 'last24') {
+          start = new Date();
+          start.setDate(start.getDate()-1);
+          end = new Date();
+        }
         let q
-        if (state.queryDateTime) {
+        if (state.queryType.type == 'datetime' || state.queryType.type == 'last24') {
           q = query(coll, where("uid", "==", uid), where("timestamp", ">", start));
         } else {
           q = query(coll, where("uid", "==", uid), where("open", "==", true));
@@ -168,7 +182,7 @@ export default defineComponent({
             }
           }
           const did = doc.id;
-          if (docBuild.timestamp.toDate() <= end || !state.queryDateTime){
+          if (docBuild.timestamp.toDate() <= end || !(state.queryType.type == 'datetime')){
             const save = {
               did:did,
               data:docBuild,
@@ -180,9 +194,10 @@ export default defineComponent({
         state.data = dataList;
         state.returned = dataList.length
         if (dataList.length == 0){
-          state.errorMsg = "Either no records in chosen timeperiod or none are currently open";
+          state.errorMsg = "Either no records in chosen timeperiod or filter";
           return;
         }
+        dataList.sort((a: any, b: any) => (a.data.timestamp > b.data.timestamp) ? -1 : (b.data.timestamp > a.data.timestamp) ? 1 : 0)
       } catch (error){
         console.log(error);
         state.errorMsg = "failed to get data from database";
@@ -203,9 +218,6 @@ export default defineComponent({
       const outStr = birthday.toLocaleDateString('en-GB') + ' (' + years.toString() + ' years)'
       return outStr
     };
-    const queryToggle = async () => {
-      state.queryDateTime = !state.queryDateTime
-    };
     const openModal = async (dataDict: any, view: string) => {
       // define components here
       let Modal = ModalView
@@ -216,6 +228,9 @@ export default defineComponent({
       } else if (view == 'view') {
         Modal = ModalView;
         Title = 'View Entry'
+      } else if (view == 'chase') {
+        Modal = ModalChase;
+        Title = 'Chasing Dragons'
       }
       const componentDict = {
         title: Title,
@@ -227,6 +242,7 @@ export default defineComponent({
         .create({
           component: Modal,
           componentProps: componentDict,
+          backdropDismiss:false
         })
         return modal.present()
     };
@@ -246,8 +262,31 @@ export default defineComponent({
       const { role } = await popover.onDidDismiss();
       console.log("dismissed with ", role)
     };
+    const openPopoverFilter = async (filter: any, ev: Event) => {
+      const popover = await popoverController
+        .create({
+          component: PopoverFilter,
+          event: ev,
+          translucent: true,
+          componentProps: {
+            data: filter,
+          },
+        })
+      await popover.present();
+
+      const { role } = await popover.onDidDismiss();
+
+      console.log("dismissed with ", role)
+    }; 
     const toggleCase = async (dataDict: any) => {
       try {
+        // check if any investigations to chase then toggle case open
+        if (Object.keys(dataDict.data).includes('chase')) {
+          if (dataDict.data.chase.values.filter((a: any) => !a.chased).length > 0){
+              alert("can't close case as outstanding Ix to chase");
+              return;
+          }
+        }
         const newOpen = !dataDict.data.open;
         const docRef = doc(db, 'referrals', dataDict.did);
         await updateDoc(docRef, {
@@ -264,10 +303,10 @@ export default defineComponent({
       doRefresh,
       openAccordion,
       getDOBAgeStr,
-      queryToggle,
       openModal,
       openPopover,
-      toggleCase
+      openPopoverFilter,
+      toggleCase,
       }
   }
 });
