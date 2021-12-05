@@ -139,9 +139,9 @@ export default defineComponent({
             if (Object.keys(x.data).includes('chase')) {
                 if (x.data.chase.values.filter((a) => !a.chased).length > 0){
                     return "ok"
-                } else {
-                    return ""
-                }
+            } else {
+                return ""
+            }
             } else {
                 const timestamp = new Date();
                 x.data['chase'] = {values: [], 'timestamp':timestamp};

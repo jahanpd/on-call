@@ -41,8 +41,15 @@
       
       <ion-grid v-if="returned>0">
         <ion-list v-for="d in data" :key="d.did">
-          <ion-item button=true @click="openAccordion(d)" color="light">
-            <p> <strong> {{d.data.name}} </strong> | {{ getDOBAgeStr(d.data.dob) }}</p>
+          <ion-item v-if="d.data.seen" button=true @click="openAccordion(d)" color="success">
+            <p> <strong> {{d.data.name}} </strong> | 
+                        {{ getDOBAgeStr(d.data.dob) }} | 
+                        {{ d.data.urn }} </p>
+          </ion-item>
+          <ion-item v-else button=true @click="openAccordion(d)" color="danger">
+            <p> <strong> {{d.data.name}} </strong> | 
+                        {{ getDOBAgeStr(d.data.dob) }} | 
+                        {{ d.data.urn }} </p>
           </ion-item>
           <ion-text v-if="d.show">
               <p class="inputText">
@@ -70,9 +77,6 @@
               <ion-button @click="openModal(d, 'edit')" color="secondary">
                 edit
               </ion-button>
-              <ion-button @click="openModal(d, 'view')" color="secondary">
-                view
-              </ion-button>  
             </ion-buttons>
             <ion-buttons slot="start">
               <ion-button @click="openPopover(d, $event)" color="primary">
@@ -86,6 +90,12 @@
               </ion-button>
               <ion-button v-else @click="toggleCase(d)" color="warning">
                   open case
+              </ion-button>
+              <ion-button v-if="d.data.seen" @click="toggleOpen(d)" color="success">
+                  seen
+              </ion-button>
+              <ion-button v-else @click="toggleOpen(d)" color="danger">
+                  unseen
               </ion-button>
             </ion-buttons>
           </ion-toolbar>
@@ -298,6 +308,19 @@ export default defineComponent({
         alert('didnt update database, check internet connection or log in again')
       }
     };
+    const toggleOpen = async (dataDict: any) => {
+      try {
+        const newOpen = !dataDict.data.seen;
+        const docRef = doc(db, 'referrals', dataDict.did);
+        await updateDoc(docRef, {
+          "seen":newOpen
+        });
+        dataDict.data["seen"] = newOpen;
+      } catch (e) {
+        console.log(e);
+        alert('didnt update database, check internet connection or log in again')
+      }
+    };
     return { 
       ...toRefs(state),
       doRefresh,
@@ -307,6 +330,7 @@ export default defineComponent({
       openPopover,
       openPopoverFilter,
       toggleCase,
+      toggleOpen
       }
   }
 });

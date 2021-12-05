@@ -25,8 +25,8 @@
                   <ion-input v-model="form.name"></ion-input>
               </ion-item>
               <ion-item>
-                  <ion-label position="floating">dob</ion-label>
-                  <ion-datetime v-model="form.dob" display-format="DD/MM/YYYY"></ion-datetime>
+                  <ion-label position="stacked">dob</ion-label>
+                  <ion-input v-model="form.dob" type="date" value="" ></ion-input>
               </ion-item>
               <ion-item>
                   <ion-label position="floating">urn/uid</ion-label>
@@ -89,7 +89,7 @@
 
       <ion-card>
         <ion-card-header button=true @click="openAccordion" color="light">
-          diagnosis
+          diagnosis and plan
         </ion-card-header>
         <ion-card-content v-show="false">
           <form
@@ -272,6 +272,7 @@ export default defineComponent({
             dataInput["uid"] = uid;
             dataInput["timestamp"]=dateTime;
             dataInput["open"]=true;
+            dataInput["seen"]=false;
             try {
               const docRef = await addDoc(collection(db, "referrals"), dataInput);
               console.log("written_data");

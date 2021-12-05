@@ -22,7 +22,7 @@
                 </ion-item>
                 <ion-item>
                     <ion-label position="floating">dob</ion-label>
-                    <ion-datetime v-model="initData.data.dob" display-format="DD/MM/YYYY" :value="data.data.dob"></ion-datetime>
+                    <ion-input v-model="initData.data.dob" type="date" :value="data.data.dob"></ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label position="floating">urn/uid</ion-label>
@@ -87,7 +87,7 @@
 
         <ion-card>
             <ion-card-header button=true @click="openAccordion" color="light">
-            diagnosis
+            diagnosis and plan
             </ion-card-header>
             <ion-card-content v-show="false">
             <form
