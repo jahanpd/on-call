@@ -46,6 +46,16 @@
                         {{ getDOBAgeStr(d.data.dob) }} | 
                         {{ d.data.urn }} </p>
           </ion-item>
+          <ion-item v-else-if="d.data.chase" button=true @click="openAccordion(d)" color="warning">
+            <p> <strong> {{d.data.name}} </strong> | 
+                        {{ getDOBAgeStr(d.data.dob) }} | 
+                        {{ d.data.urn }} </p>
+          </ion-item>
+          <ion-item v-else-if="d.data.arrival" button=true @click="openAccordion(d)" color="tertiary">
+            <p> <strong> {{d.data.name}} </strong> | 
+                        {{ getDOBAgeStr(d.data.dob) }} | 
+                        {{ d.data.urn }} </p>
+          </ion-item>
           <ion-item v-else button=true @click="openAccordion(d)" color="danger">
             <p> <strong> {{d.data.name}} </strong> | 
                         {{ getDOBAgeStr(d.data.dob) }} | 
