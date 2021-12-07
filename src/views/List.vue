@@ -44,22 +44,30 @@
           <ion-item v-if="d.data.seen" button=true @click="openAccordion(d)" color="success">
             <p> <strong> {{d.data.name}} </strong> | 
                         {{ getDOBAgeStr(d.data.dob) }} | 
-                        {{ d.data.urn }} </p>
+                        {{ d.data.urn }} |
+                        {{ d.data.location }}
+            </p>
           </ion-item>
           <ion-item v-else-if="d.data.chase" button=true @click="openAccordion(d)" color="warning">
             <p> <strong> {{d.data.name}} </strong> | 
                         {{ getDOBAgeStr(d.data.dob) }} | 
-                        {{ d.data.urn }} </p>
+                        {{ d.data.urn }} |
+                        {{ d.data.location }}
+            </p>
           </ion-item>
           <ion-item v-else-if="d.data.arrival" button=true @click="openAccordion(d)" color="tertiary">
             <p> <strong> {{d.data.name}} </strong> | 
                         {{ getDOBAgeStr(d.data.dob) }} | 
-                        {{ d.data.urn }} </p>
+                        {{ d.data.urn }} | 
+                        {{ d.data.location }}
+            </p>
           </ion-item>
           <ion-item v-else button=true @click="openAccordion(d)" color="danger">
             <p> <strong> {{d.data.name}} </strong> | 
                         {{ getDOBAgeStr(d.data.dob) }} | 
-                        {{ d.data.urn }} </p>
+                        {{ d.data.urn }} |
+                        {{ d.data.location }}
+            </p>
           </ion-item>
           <ion-text v-if="d.show">
               <p class="inputText">
